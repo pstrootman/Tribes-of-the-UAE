@@ -283,8 +283,7 @@
                 .join("circle")
                 .attr("r", d => d.size || 10)
                 .attr("fill", d => color(d.group))
-                .on("click", (event, d) => selectNode(d))
-                .call(drag(simulation));
+                .call(drag(simulation)); // This now handles clicks and drags
 
             label = label
                 .data(nodes, d => d.id)
@@ -308,19 +307,41 @@
             label.attr("transform", d => `translate(${d.x},${d.y})`);
         });
 
+        // This drag function now distinguishes between a click and a drag.
         const drag = simulation => {
             function dragstarted(event, d) {
+                // Set a flag to false on drag start.
+                // It will only be set to true if the 'dragged' event fires.
+                d.isDragging = false;
                 if (!event.active) simulation.alphaTarget(0.3).restart();
-                d.fx = d.x; d.fy = d.y;
+                d.fx = d.x;
+                d.fy = d.y;
             }
+            
             function dragged(event, d) {
-                d.fx = event.x; d.fy = event.y;
+                // If the mouse moves, this event fires and we set the flag.
+                d.isDragging = true; 
+                d.fx = event.x;
+                d.fy = event.y;
             }
+            
             function dragended(event, d) {
                 if (!event.active) simulation.alphaTarget(0);
-                d.fx = null; d.fy = null;
+                
+                // If the 'dragged' event never fired, it's a click.
+                if (!d.isDragging) {
+                    selectNode(d);
+                }
+                
+                d.fx = null;
+                d.fy = null;
+                // The isDragging property will be reset on the next dragstart.
             }
-            return d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended);
+            
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
         };
         
         // --- INTERACTIVITY ---
