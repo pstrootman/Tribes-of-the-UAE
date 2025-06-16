@@ -72,11 +72,11 @@
             <div id="legend" class="absolute bottom-4 left-4 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md z-10">
                 <h3 class="font-bold text-lg mb-2">Legend</h3>
                 <div class="space-y-2">
-                    <div class="flex items-center"><div class="legend-color-box bg-sky-600"></div><span>Core Abu Dhabi</span></div>
+                    <div class="flex items-center"><div class="legend-color-box bg-sky-600"></div><span>Core Abu Dhabi / Bani Yas</span></div>
                     <div class="flex items-center"><div class="legend-color-box bg-orange-500"></div><span>Nomadic Tribes</span></div>
-                    <div class="flex items-center"><div class="legend-color-box bg-slate-500"></div><span>Fringe Tribes</span></div>
-                    <div class="flex items-center"><div class="legend-color-box bg-indigo-600"></div><span>Northern Qasimi Sphere</span></div>
-                    <div class="flex items-center"><div class="legend-color-box bg-teal-600"></div><span>Mountain Tribes</span></div>
+                    <div class="flex items-center"><div class="legend-color-box bg-slate-500"></div><span>Fringe / Buraimi Tribes</span></div>
+                    <div class="flex items-center"><div class="legend-color-box bg-indigo-600"></div><span>Northern / Qasimi Sphere</span></div>
+                    <div class="flex items-center"><div class="legend-color-box bg-teal-600"></div><span>Mountain / Other Tribes</span></div>
                 </div>
             </div>
             <svg id="tribal-graph" class="w-full h-full"></svg>
@@ -95,71 +95,102 @@
 
     <script>
         // --- DATA SETUP ---
-        // This is where we convert the provided text into a structured format for D3.
         const dataset = {
             nodes: [
-                // I. Core Abu Dhabi Tribes (Group 1)
-                { id: "Bani Yas", group: 1, size: 20, description: "A powerful tribal confederation from the Liwa Oasis. The Al Bu Falah clan established Abu Dhabi, while the Al Bu Falasah established Dubai. Their diverse economy included date cultivation, camel herding, and a dominant role in the coastal pearling industry. As leaders of the Hinawi tribal faction, their primary rivals were the Qawasim." },
-                { id: "Manaşir", group: 1, size: 15, description: "A large and powerful bedouin tribe from the Dhafrah deserts. A key ally within the Bani Yas confederacy, they were primarily nomadic camel herders who also participated in pearling. In the mid-20th century, many sought work in the oilfields." },
-                { id: "Dhawahir", group: 1, size: 12, description: "A bedouin tribe associated with the Dhafrah region and Buraimi oasis. As an important allied tribe within the Bani Yas confederacy, their economy was based on nomadic pastoralism. Their sheikhs gave evidence for Abu Dhabi at the Buraimi Arbitration Tribunal." },
-                
+                // I. Core Abu Dhabi / Bani Yas Confederacy (Group 1)
+                { id: "Bani Yas", group: 1, size: 22, description: "A powerful tribal confederation from the Liwa Oasis. The Al Bu Falah clan established Abu Dhabi, while the Al Bu Falasah established Dubai. Their diverse economy included date cultivation, camel herding, and a dominant role in the coastal pearling industry. As leaders of the Hinawi tribal faction, their primary rivals were the Qawasim." },
+                { id: "Manasir", group: 1, size: 16, description: "The second most important tribe in Abu Dhabi, they cooperated closely and lived in harmony with the Bani Yas, sharing resources and fighting alongside them in wars. They were primarily nomadic camel herders but also engaged in pearling and goods transport." },
+                { id: "Dhawahir", group: 1, size: 14, description: "The original inhabitants of the Buraimi oasis villages (Al Ain, Jimi, etc.). They became subjects of the Ruler of Abu Dhabi and were primarily date cultivators. They had a consistently bad relationship with the Na'im but joined forces with the Al Bu Falah." },
+                { id: "Al Bu Falah", group: 1, size: 10, description: "Also known as Al Nahyan, this is the ruling subsection of the Bani Yas in Abu Dhabi. They became connected in marriage with the Sudan tribe over generations. Their economy included pearling and camel herding." },
+                { id: "Al Bu Falasah", group: 1, size: 10, description: "A section of the Bani Yas that seceded from Abu Dhabi in 1833 to establish Dubai, with their leader becoming the ancestor of Dubai's rulers. Their economy was based on pearling and fishing." },
+                { id: "Al Bu Mahair", group: 1, size: 8, description: "A numerous section of the Bani Yas, though sometimes listed as a separate tribe. Based in Dubai, Sharjah, and Abu Dhabi, their economy was focused on pearling and fishing." },
+                { id: "Qubaisat", group: 1, size: 8, description: "A very mobile and representative section of the Bani Yas, active in pearling and date cultivation. They seceded from Abu Dhabi several times in the 19th century but became related to the ruling family through marriage." },
+                { id: "Mazari", group: 1, size: 8, description: "The principal beduin section of the Bani Yas, focused on camel herding, pearling, and date cultivation. They were closely associated with the Manasir." },
+                { id: "Hawamil", group: 1, size: 8, description: "An important part of the settled population of the Liwa oasis, also present on Dalma island. They were involved in pearling, owned livestock (goats/sheep), and cultivated dates." },
+                { id: "Sudan", group: 1, size: 8, description: "An important tribe that identifies with the Bani Yas in Abu Dhabi. They were steadfast supporters of and intermarried with the Al Bu Falah. Their economy included pearling, fishing, and seafaring." },
+                { id: "Maharibah", group: 1, size: 6, description: "A subsection of the Bani Yas significant in the pearling industry. Some were nomadic while others lived in Liwa or on Dalma island." },
+                { id: "Rumaithat", group: 1, size: 6, description: "A section of the Bani Yas focused on pearling and fishing. They did not own date gardens in the Liwa and were less mobile than other sections." },
+                { id: "Marar", group: 1, size: 5, description: "A section of the Bani Yas primarily based in Dubai, but with a presence in the Liwa and a close relationship to the Mazari." },
+                { id: "Qumzan", group: 1, size: 5, description: "A small pearling section of the Bani Yas, who later moved from Abu Dhabi to Dubai." },
+                { id: "Mishaghin", group: 1, size: 5, description: "A small, predominantly beduin section of the Bani Yas, focused on nomadic pastoralism." },
+
                 // II. Nomadic Tribes (Group 2)
-                { id: "'Awamir", group: 2, size: 10, description: "A bedouin tribe from the interior Dhafrah region and Liwa Oasis. A key tribe within the Bani Yas confederacy, their livelihood was based on camel herding. Marriage ties were used to forge local links in Buraimi." },
-                { id: "'Afar", group: 2, size: 8, description: "Often considered a section of the 'Awamir, they visited Abu Dhabi territory and joined in raids. Important tribe in Hadhramaut." },
-                { id: "Al Murrah", group: 2, size: 10, description: "A powerful beduin tribe from Saudi Arabia. They owned date gardens in Liwa and paid tax, but were considered visitors, not subjects of Abu Dhabi." },
-                { id: "Rashid", group: 2, size: 9, description: "A wide-ranging bedouin tribe of the 'inner desert'. Their economy was based on camel herding, serving as expert guides, and raiding. They were on good terms with the Bani Yas and Manasir but were enemies of the Bani Qitab." },
+                { id: "'Awamir", group: 2, size: 12, description: "A large beduin tribe from Hadhramaut that became loyal to the Al Bu Falah Ruler, often supporting the Bani Yas in war. They had constant feuds with the Duru', an Omani tribe." },
+                { id: "Rashid", group: 2, size: 9, description: "A small, authentic beduin tribe from the inner desert. Their economy was based on pastoralism, and they often served as expert guides. They were on good terms with the Bani Yas and Manasir but were enemies of the Bani Qitab." },
+                { id: "Al Murrah", group: 2, size: 10, description: "A powerful beduin tribe from Saudi Arabia that frequently visited Abu Dhabi territory. They were generally considered visitors but would refer disputes to the Ruler of Abu Dhabi." },
+                { id: "Manahil", group: 2, size: 7, description: "A Hadhramauti beduin tribe that visited Abu Dhabi territory (Liwa, Buraimi) for camel grazing and to purchase dates." },
+                { id: "'Afar", group: 2, size: 7, description: "Often considered a section of the 'Awamir but see themselves as separate. They joined with the 'Awamir for beduin raids." },
+                { id: "Ghafalah", group: 2, size: 6, description: "An entirely beduin tribe from the Jiri plain. Generally well-disposed towards the Shaikh of Abu Dhabi and assisted in warfare, but had their closest relations with Umm al-Qaiwain." },
                 
-                // III. Fringe Tribes (Group 3)
-                { id: "Na'im", group: 3, size: 18, description: "One of the most powerful tribes, centered on the Buraimi Oasis. Their main sections are the Al Bu Shamis and Al Bu Kharaiban. As leaders of the Ghafiri faction, they were traditional rivals of the Bani Yas. Their paramount sheikh was a key figure in the Buraimi dispute." },
-                { id: "Al Bū Shamis", group: 3, size: 10, description: "A section of the Na'im that established a nearly separate identity. Often associated with the Al Bu Falah (Bani Yas) and became their steadfast allies." },
-                { id: "Bani Qitab", group: 3, size: 12, description: "A Ghafiri tribe sharing the Buraimi Oasis with the Naim. Their economy was likely based on agriculture. They were often in conflict with tribes from Abu Dhabi (Bani Yas)." },
-                { id: "Bani Kaab", group: 3, size: 9, description: "A tribe inhabiting the Buraimi Oasis area. Though nominally under Naimi paramountcy, they acted independently and declared for Saudi Arabia during the Buraimi dispute, fighting alongside the Naim and Bani Qitab." },
-                { id: "Balūsh", group: 3, size: 8, description: "Settled population in Dhahirah with their own tribal organization. Maintained good relationships with the Bani Yas and sought help from them." },
+                // III. Fringe / Buraimi Tribes (Group 3)
+                { id: "Na'im", group: 3, size: 18, description: "Historically the most numerous and important tribe of the hinterland, centered on the Buraimi Oasis. They were torn by internal strife and had bad relationships with the Dhawahir, Bani Ka'ab, and Bani Qitab." },
+                { id: "Bani Qitab", group: 3, size: 13, description: "A Ghafiri tribe sharing the Buraimi Oasis with the Naim. They were often in conflict with tribes from Abu Dhabi (Bani Yas)." },
+                { id: "Bani Kaab", group: 3, size: 9, description: "A tribe inhabiting the Buraimi Oasis area. Though nominally under Naimi paramountcy, they acted independently and often fought alongside the Naim and Bani Qitab." },
+                { id: "Al Bu Shamis", group: 3, size: 10, description: "A section of the Na'im tribe that became almost independent. They became steadfast allies of the Al Bu Falah (Bani Yas)." },
+                { id: "Balush", group: 3, size: 8, description: "A distinct settled population in Dhahirah with a trade-based economy. They had good relationships with the Bani Yas but had a dispute with their former protectors, the Bani Qitab." },
 
-                // IV. Northern Qasimi Sphere (Group 4)
-                { id: "Qawāsim", group: 4, size: 18, description: "The ruling family of Sharjah and Ras al-Khaimah, they were a formidable maritime power leading the northern Ghafiri faction. Their dominance in sea trade and attacks on British ships led to them being labeled as pirates and resulted in conflict with the British and their main rivals, the Bani Yas." },
-                { id: "Sharqiyin", group: 4, size: 14, description: "The dominant tribe of the Shamaliyah coast (modern Fujairah). Part of the Hinawi faction, their history was defined by seeking independence from the rule of the Qawasim of Sharjah, which they achieved in 1952." },
-                { id: "Al 'Ali", group: 4, size: 10, description: "The ruling family of the sheikhdom of Umm al-Quwain. Their economy was based on maritime activities like pearling and fishing, and they were part of the complex network of local alliances and rivalries." },
-                { id: "Za'ab", group: 4, size: 8, description: "A tribe with a stronghold at Jazirah al Hamra, often antagonistic to Ra's al Khaimah politics." },
-                { id: "Naqbiyin", group: 4, size: 8, description: "A tribe living at close quarters with the Sharqiyin, often as natural rivals. They constituted the tribal majority in Khaur Fakkān and became a principal power in Kalba's bid for independence." },
+                // IV. Northern / Qasimi Sphere (Group 4)
+                { id: "Qawāsim", group: 4, size: 18, description: "The ruling family of Sharjah and Ras al-Khaimah, they were a formidable maritime power leading the northern Ghafiri faction. Their primary rivals were the Bani Yas. Their dominance led to conflict with the British and secession attempts from tribes under their rule." },
+                { id: "Sharqiyin", group: 4, size: 15, description: "The second most numerous tribe, dominant on the Shamaliyah coast (Fujairah). They had frequent disputes with their neighbors (Shihuh, Na'im, Naqbiyin) and their history was defined by seeking independence from Qasimi rule." },
+                { id: "Al 'Ali", group: 4, size: 12, description: "The ruling family of Umm al-Quwain, with Al Mu'alla as the ruling family. Their economy was based on maritime activities. They are related to the Al 'Ali tribe in Persia." },
+                { id: "Tanaij", group: 4, size: 10, description: "The largest beduin element in the northern Trucial Coast, making them politically important. Their economy was based on pastoralism and pearling." },
+                { id: "Naqbiyin", group: 4, size: 8, description: "The natural rivals of the Sharqiyin, with whom they lived in close quarters. They constituted the tribal majority in Khaur Fakkan and were key to Kalba's bid for independence." },
+                { id: "Za'ab", group: 4, size: 8, description: "An important tribe in the Qasimi realm with a stronghold at Jazirah al Hamra. They were often antagonistic to Ra's al Khaimah politics and maintained links with relatives in Oman." },
 
-                // V. Mountain Tribes (Group 5)
-                { id: "Shihūh", group: 5, size: 15, description: "A reclusive and warlike semi-nomadic tribe inhabiting the rugged Musandam Peninsula. Their economy mixed fishing, animal husbandry, and small-scale terrace farming. Their strategic and inaccessible territory allowed them to remain highly independent." },
+                // V. Mountain / Other Tribes (Group 5)
+                { id: "Shihūh", group: 5, size: 15, description: "A composite tribe of Arab and Persian origin inhabiting the rugged Musandam Peninsula. Subjects of the Sultan of Oman, they were a reclusive and warlike people with a mixed economy. They had frequent disputes with the Qawasim and supported the Sharqiyin's secession." },
                 { id: "Sultan of Oman", group: 5, size: 15, description: "A major regional power whose influence was contested by various tribes, particularly in the Musandam and Buraimi regions." },
+                { id: "Kunud", group: 5, size: 5, description: "Descendants of Aswad al Kindi from Yemen, along with the Sudan tribe. Based in Oman." },
             ],
             links: [
-                // Alliances
-                { source: "Bani Yas", target: "Manaşir", type: "alliance" },
+                // Alliances & Positive Relationships
+                { source: "Bani Yas", target: "Manasir", type: "alliance" },
                 { source: "Bani Yas", target: "'Awamir", type: "alliance" },
-                { source: "Al Bū Shamis", target: "Bani Yas", type: "alliance" },
-                { source: "Bani Yas", target: "Balūsh", type: "alliance" },
-                { source: "Qawāsim", target: "Al 'Ali", type: "alliance" },
                 { source: "Bani Yas", target: "Dhawahir", type: "alliance" },
+                { source: "Al Bu Shamis", target: "Al Bu Falah", type: "alliance" },
+                { source: "Bani Yas", target: "Balush", type: "alliance" },
                 { source: "Rashid", target: "Bani Yas", type: "alliance" },
-                { source: "Rashid", target: "Manaşir", type: "alliance" },
+                { source: "Rashid", target: "Manasir", type: "alliance" },
+                { source: "Ghafalah", target: "Bani Yas", type: "alliance" },
+                { source: "Ghafalah", target: "Al 'Ali", type: "alliance" },
+                { source: "Sudan", target: "Al Bu Falah", type: "alliance" },
+                { source: "Qubaisat", target: "Al Bu Falah", type: "alliance" },
+                { source: "Mazari", target: "Manasir", type: "alliance" },
+                { source: "Shihūh", target: "Sharqiyin", type: "alliance" },
 
-                // Conflicts
-                { source: "Na'im", target: "'Awamir", type: "conflict" },
-                { source: "Na'im", target: "Bani Qitab", type: "conflict" },
-                { source: "Qawāsim", target: "Sultan of Oman", type: "conflict" },
-                { source: "Qawāsim", target: "Sharqiyin", type: "conflict" },
-                { source: "Qawāsim", target: "Shihūh", type: "conflict" },
-                { source: "Za'ab", target: "Qawāsim", type: "conflict" },
-                { source: "Na'im", target: "Qawāsim", type: "conflict" },
-                { source: "Sharqiyin", target: "Naqbiyin", type: "conflict" },
+                // Subordination / Section Of
+                { source: "Bani Yas", target: "Al Bu Falah", type: "subordination" },
+                { source: "Bani Yas", target: "Al Bu Falasah", type: "subordination" },
+                { source: "Bani Yas", target: "Al Bu Mahair", type: "subordination" },
+                { source: "Bani Yas", target: "Qubaisat", type: "subordination" },
+                { source: "Bani Yas", target: "Mazari", type: "subordination" },
+                { source: "Bani Yas", target: "Hawamil", type: "subordination" },
+                { source: "Bani Yas", target: "Maharibah", type: "subordination" },
+                { source: "Bani Yas", target: "Rumaithat", type: "subordination" },
+                { source: "Bani Yas", target: "Marar", type: "subordination" },
+                { source: "Bani Yas", target: "Qumzan", type: "subordination" },
+                { source: "Bani Yas", target: "Mishaghin", type: "subordination" },
+                { source: "Na'im", target: "Al Bu Shamis", type: "subordination" },
+
+                // Conflicts & Rivalries
                 { source: "Bani Yas", target: "Qawāsim", type: "conflict" },
                 { source: "Bani Yas", target: "Na'im", type: "conflict" },
-                { source: "Bani Yas", target: "Bani Qitab", type: "conflict" },
+                { source: "Dhawahir", target: "Na'im", type: "conflict" },
+                { source: "Balush", target: "Bani Qitab", type: "conflict" },
+                { source: "Na'im", target: "Bani Kaab", type: "conflict" },
+                { source: "Na'im", target: "Bani Qitab", type: "conflict" },
                 { source: "Rashid", target: "Bani Qitab", type: "conflict" },
-                
-                // Subordination
-                { source: "Qawāsim", target: "Za'ab", type: "subordination" },
+                { source: "Qawāsim", target: "Sharqiyin", type: "conflict" },
+                { source: "Qawāsim", target: "Shihūh", type: "conflict" },
+                { source: "Sharqiyin", target: "Naqbiyin", type: "conflict" },
+                { source: "Sharqiyin", target: "Shihūh", type: "conflict" },
+                { source: "Sharqiyin", target: "Na'im", type: "conflict" },
+                { source: "Al Bu Falasah", target: "Bani Yas", type: "conflict" }, // Secession
                 
                 // Neutral / Transactional
                 { source: "Bani Yas", target: "Al Murrah", type: "neutral" },
                 { source: "Sultan of Oman", target: "Na'im", type: "neutral" },
-                { source: "Shihūh", target: "Sultan of Oman", type: "neutral" },
-                { source: "Bani Yas", target: "Shihūh", type: "neutral" },
+                { source: "Sultan of Oman", target: "Shihūh", type: "neutral" },
                 { source: "Bani Kaab", target: "Bani Qitab", type: "neutral" },
             ]
         };
@@ -170,16 +201,15 @@
         const width = graphContainer.clientWidth;
         const height = graphContainer.clientHeight;
         
-        // Colors for groups and links
         const color = d3.scaleOrdinal(d3.schemeCategory10)
             .domain([1, 2, 3, 4, 5])
-            .range(['#0ea5e9', '#f97316', '#64748b', '#4f46e5', '#0d9488']); // sky, orange, slate, indigo, teal
+            .range(['#0ea5e9', '#f97316', '#64748b', '#4f46e5', '#0d9488']);
             
         const linkColor = {
-            alliance: '#22c55e', // green-500
-            conflict: '#ef4444', // red-500
-            subordination: '#3b82f6', // blue-500
-            neutral: '#8b5cf6' // violet-500
+            alliance: '#22c55e',
+            conflict: '#ef4444',
+            subordination: '#3b82f6',
+            neutral: '#8b5cf6'
         };
 
         const linkStrokeStyle = {
@@ -192,15 +222,15 @@
         let nodes = dataset.nodes.map(d => Object.assign({}, d));
         let links = dataset.links.map(d => Object.assign({}, d));
 
-        // Create the SVG container
         const svg = d3.select("#tribal-graph")
             .attr("viewBox", [0, 0, width, height])
             .attr("preserveAspectRatio", "xMidYMid meet");
 
         const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(150))
-            .force("charge", d3.forceManyBody().strength(-400))
-            .force("center", d3.forceCenter(width / 2, height / 2));
+            .force("link", d3.forceLink(links).id(d => d.id).distance(120).strength(0.5))
+            .force("charge", d3.forceManyBody().strength(-350))
+            .force("x", d3.forceX(width / 2).strength(0.05))
+            .force("y", d3.forceY(height / 2).strength(0.05));
 
         const g = svg.append("g");
 
@@ -216,17 +246,14 @@
             .attr("class", "labels")
             .selectAll("text");
 
-        // Function to update the graph based on filters
         function updateGraph() {
             const activeFilters = new Set();
             d3.selectAll("#filters input:checked").each(function(d) {
                 activeFilters.add(this.value);
             });
             
-            // Filter links
             const filteredLinks = links.filter(d => activeFilters.has(d.type));
             
-            // Update links
             link = link
                 .data(filteredLinks, d => `${d.source.id}-${d.target.id}`)
                 .join("line")
@@ -234,7 +261,6 @@
                 .style("stroke-width", 2.5)
                 .style("stroke-dasharray", d => linkStrokeStyle[d.type] === 'dashed' ? '5,5' : (linkStrokeStyle[d.type] === 'dotted' ? '2,3' : 'none'));
 
-            // Update nodes
             node = node
                 .data(nodes, d => d.id)
                 .join("circle")
@@ -245,7 +271,6 @@
                 .on("mouseout", nodeMouseOut)
                 .call(drag(simulation));
 
-            // Update labels
             label = label
                 .data(nodes, d => d.id)
                 .join("text")
@@ -264,16 +289,13 @@
                 .attr("y1", d => d.source.y)
                 .attr("x2", d => d.target.x)
                 .attr("y2", d => d.target.y);
-
             node
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y);
-                
             label
                 .attr("transform", d => `translate(${d.x},${d.y})`);
         });
 
-        // Drag functionality
         const drag = simulation => {
             function dragstarted(event, d) {
                 if (!event.active) simulation.alphaTarget(0.3).restart();
@@ -292,19 +314,29 @@
             return d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended);
         };
         
-        // --- INTERACTIVITY FUNCTIONS ---
         const infoTitle = d3.select("#info-title");
         const infoContent = d3.select("#info-content");
 
         function nodeClicked(event, d) {
             infoTitle.text(d.id);
-            infoContent.html(`<p>${d.description}</p>`);
+            infoContent.html(`<p class="text-gray-700 text-base">${d.description}</p>`);
+        }
+        
+        const linkedByIndex = {};
+        dataset.links.forEach(d => {
+            const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+            const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+            linkedByIndex[`${sourceId}-${targetId}`] = 1;
+        });
+
+        function isConnected(a, b) {
+            return linkedByIndex[`${a.id}-${b.id}`] || linkedByIndex[`${b.id}-${a.id}`] || a.id === b.id;
         }
 
         function nodeMouseOver(event, d) {
-            node.style('opacity', n => isConnected(d, n) ? 1.0 : 0.2);
-            link.style('opacity', l => l.source === d || l.target === d ? 1.0 : 0.2);
-            label.style('opacity', n => isConnected(d, n) ? 1.0 : 0.2);
+            node.style('opacity', n => isConnected(d, n) ? 1.0 : 0.1);
+            link.style('opacity', l => (l.source === d || l.target === d || l.source.id === d.id || l.target.id === d.id) ? 1.0 : 0.1);
+            label.style('opacity', n => isConnected(d, n) ? 1.0 : 0.1);
         }
 
         function nodeMouseOut() {
@@ -313,17 +345,6 @@
             label.style('opacity', 1.0);
         }
         
-        // Helper to check for connections
-        const linkedByIndex = {};
-        dataset.links.forEach(d => {
-            linkedByIndex[`${d.source.id || d.source}-${d.target.id || d.target}`] = 1;
-        });
-
-        function isConnected(a, b) {
-            return linkedByIndex[`${a.id}-${b.id}`] || linkedByIndex[`${b.id}-${a.id}`] || a.id === b.id;
-        }
-        
-        // Add zoom functionality
         const zoom = d3.zoom()
             .scaleExtent([0.1, 4])
             .on("zoom", (event) => {
@@ -331,14 +352,10 @@
             });
         
         svg.call(zoom);
-
-        // Initial render
         updateGraph();
         
-        // Event listener for filters
         d3.selectAll("#filters input").on("change", updateGraph);
         
-        // Resize handler
         window.addEventListener('resize', () => {
             const newWidth = graphContainer.clientWidth;
             const newHeight = graphContainer.clientHeight;
